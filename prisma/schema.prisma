@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 전화번호 인증으로 본인인증
+model user {
+  no      Int     @id @default(autoincrement())
+  id      String  @unique
+  pw      String
+  name    String?
+  phone   Int?
+  address String?
+  team   team[]
+  joinTeam joinTeam[]
+}
+
+model team {
+  no       Int @id @default(autoincrement())
+  master   String
+  user     user  @relation(fields: [master], references: [id])
+  name     String
+  code     String @unique
+  joinTeam joinTeam[]
+}
+
+model joinTeam {
+  no        Int @id @default(autoincrement())
+  userId    String
+  user      user @relation(fields: [userId], references: [id])
+  team_code  String @map("teamCode")
+  team      team @relation(fields: [team_code], references: [code])
+}
