@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Delete } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { UserService } from './user.service';
 import { user as UserModel } from '@prisma/client';
@@ -23,6 +23,7 @@ export class UserController {
         return this.userService.getUser({ id: String(id) })
     }
 
+    // 회원가입
     @Post()
     async createUser(
         @Body() userData: {
@@ -33,4 +34,10 @@ export class UserController {
         }): Promise<UserModel> {
             return this.userService.createUser(userData)
         }
+
+    // ID로 회원 탈퇴
+    @Delete(':id')
+    async deleteUser(@Param('id') id: string): Promise<UserModel> {
+        return this.userService.deleteUser({ id: String(id) })
+    }
 }
