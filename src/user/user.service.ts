@@ -14,7 +14,13 @@ export class UserService {
         });
     }
 
-    async getAll(): Promise<user[] | null>{
+    async getAll(): Promise<user[] | null> {
         return this.prismaService.user.findMany();
+    }
+
+    async createUser(data: Prisma.userCreateInput): Promise<user | null> {
+        return this.prismaService.user.create({
+            data
+        });
     }
 }

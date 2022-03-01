@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { UserService } from './user.service';
 import { user as UserModel } from '@prisma/client';
@@ -22,4 +22,15 @@ export class UserController {
     async getAuth(@Param('id') id: string): Promise<UserModel> {
         return this.userService.getUser({ id: String(id) })
     }
+
+    @Post()
+    async createUser(
+        @Body() userData: {
+            id: string,
+            pw: string,
+            name: string
+            phone?: string
+        }): Promise<UserModel> {
+            return this.userService.createUser(userData)
+        }
 }

@@ -13,8 +13,7 @@ model user {
   id      String  @unique
   pw      String
   name    String?
-  phone   Int?
-  address String?
+  phone   String?
   team   team[]
   joinTeam joinTeam[]
 }
