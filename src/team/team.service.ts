@@ -18,6 +18,12 @@ export class TeamService {
         })
     }
 
+    async getMaster(data: Prisma.teamWhereInput): Promise<team[] | null> {
+        return this.prismaService.team.findMany({
+            where : data
+        })
+    }
+
     async createTeam(data: Prisma.teamCreateInput): Promise<team | null> {
         return this.prismaService.team.create({
             data
@@ -30,8 +36,8 @@ export class TeamService {
     }): Promise<team | null> {
         const { where, data } = params;
         return this.prismaService.team.update({
-            data,
-            where
+            where,
+            data
         })
     }
 
