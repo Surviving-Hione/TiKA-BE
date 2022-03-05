@@ -52,7 +52,7 @@ export class TeamController {
             data: { 
                 name,
                 user : {
-                    connect : {id : master}
+                    connect: { id: master }
                 }
              }
         })
