@@ -28,7 +28,9 @@ export class UserController {
             id: string,
             pw: string,
             name: string
-            phone?: string
+            phone?: string,
+            masterCount: 1,
+            payment?: null
         }): Promise<UserModel> {
             return this.userService.createUser(userData)
         }

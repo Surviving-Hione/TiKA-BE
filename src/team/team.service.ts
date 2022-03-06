@@ -46,6 +46,4 @@ export class TeamService {
             where: data
         })
     }
-
-    
 }
