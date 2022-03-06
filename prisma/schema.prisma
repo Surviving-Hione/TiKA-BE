@@ -16,7 +16,7 @@ model user {
   phone   String?
   team   team[]
   joinTeam joinTeam[]
-  credit String?
+  credit Boolean
   payment String?
 }
 
