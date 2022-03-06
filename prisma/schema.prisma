@@ -17,6 +17,7 @@ model user {
   team   team[]
   joinTeam joinTeam[]
   credit String?
+  payment Boolean
 }
 
 model team {
