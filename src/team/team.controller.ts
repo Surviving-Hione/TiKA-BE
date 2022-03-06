@@ -27,12 +27,13 @@ export class TeamController {
 
     @Post()
     async createTeam(
-        @Body() data: { name: string, code: string, teamMaster: string } 
+        @Body() data: { name: string, teamMaster: string } 
         ): Promise<TeamModel> {
-        const { name, code, teamMaster } = data;
+            const { name, teamMaster } = data;
+            const teamCode = Math.random().toString(36).slice(2);
         return this.teamService.createTeam({
             name,
-            code,
+            code : teamCode,
             user : {
                 connect : { id : teamMaster}
             }
