@@ -17,13 +17,13 @@ export class TeamController {
     }
 
     // 해당 아이디가 팀장인 팀 찾기
-    @Get(':master') 
+    @Get('/master/:master') 
     async getMaster(@Param('master') master: string): Promise<TeamModel[]> {
         return this.teamService.getMaster({ master: String(master) })
     }
 
     // 코드로 팀 조회
-    @Get('code/:code') // Unique
+    @Get(':code') // Unique
     async getCode(@Param('code') code: string): Promise<TeamModel> {
         return this.teamService.getTeam({ code: String(code) })
     }
@@ -33,7 +33,7 @@ export class TeamController {
     async createTeam(
         @Body() data: { name: string, teamMaster: string },
         @Res() res
-    ): Promise<TeamModel> {
+    ): Promise<String> {
         const { name, teamMaster } = data;
         let teamCode = Math.random().toString(36).slice(2);
         // while (teamCode != (await this.teamService.getTeam({ code: String(teamCode) })).code) {
@@ -41,7 +41,7 @@ export class TeamController {
         // }
         if ((await this.userService.getUser({ id: String(teamMaster) })).masterCount <= 0) {
             return res.status(400).send({
-                statusMsg: 'Created Fail',
+                statusMsg: 'Created Fail, Do not have MasterCount',
                 name,
                 code: teamCode,
                 user: {
