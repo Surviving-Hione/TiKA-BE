@@ -1,13 +1,15 @@
 import { Controller, Get, Param, Post, Body, Put, Delete, HttpCode, Res } from '@nestjs/common';
 import { TeamService } from './team.service';
 import { UserService } from '../user/user.service';
+import { PrismaService } from '../prisma.service';
 import { team as TeamModel } from '@prisma/client';
 
 @Controller('team')
 export class TeamController {
     constructor(
         private readonly teamService: TeamService,
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private readonly prismaService: PrismaService
     ) {}
 
     // 등록된 모든 팀 조회
@@ -35,7 +37,7 @@ export class TeamController {
         @Res() res
     ): Promise<String> {
         const { name, teamMaster } = data;
-        let teamCode = Math.random().toString(36).slice(2);
+        const teamCode = Math.random().toString(36).slice(2);
         // while (teamCode != (await this.teamService.getTeam({ code: String(teamCode) })).code) {
         //     teamCode = Math.random().toString(36).slice(2);
         // }
@@ -65,15 +67,22 @@ export class TeamController {
                     connect: { id: teamMaster }
                 },
             })
+            // create JoinTeam Data
+            this.teamService.createJoinTeam({
+                user: {
+                    connect: { id: teamMaster }
+                },
+                team: {
+                    connect: { code: teamCode }
+                }
+            })
 
             return res.status(200).send({
                 statusMsg: 'Created Successfully',
                 data: {
                     name,
                     code: teamCode,
-                    user: {
-                        connect: { id: teamMaster }
-                    }
+                    user: teamMaster
                 }
             })
         }
@@ -100,8 +109,19 @@ export class TeamController {
 
     @Delete(':code')
     async deleteTeam(
-        @Param('code') code: string
-    ): Promise<TeamModel> {
-        return this.teamService.deleteTeam({ code: String(code) })
+        @Param('code') code: string,
+        @Res() res
+    ): Promise<String> {
+        this.teamService.deleteTeam({ code: String(code) })
+
+        // delete joinTeam data
+        this.prismaService.joinTeam.deleteMany({
+            where: {
+                team_code: code
+            }
+        })
+        return res.status(200).send({
+            statusMsg: 'Deleted Successfully',
+        }) 
     }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { team, Prisma } from '@prisma/client';
+import { team, joinTeam, Prisma } from '@prisma/client';
 
 @Injectable()
 export class TeamService {
@@ -44,6 +44,20 @@ export class TeamService {
     async deleteTeam(data: Prisma.teamWhereUniqueInput): Promise<team | null> {
         return this.prismaService.team.delete({
             where: data
+        })
+    }
+
+    // joinTeam ---
+
+    async getJoinTeam(data: Prisma.joinTeamWhereInput): Promise<joinTeam[] | null> {
+        return this.prismaService.joinTeam.findMany({
+            where: data
+        })
+    }
+
+    async createJoinTeam(data: Prisma.joinTeamCreateInput): Promise<joinTeam | null> {
+        return this.prismaService.joinTeam.create({
+            data
         })
     }
 }
