@@ -9,30 +9,51 @@ datasource db {
 
 // 전화번호 인증으로 본인인증
 model user {
-  no      Int     @id @default(autoincrement())
-  id      String  @unique
-  pw      String
-  name    String?
-  phone   String?
-  team   team[]
-  joinTeam joinTeam[]
-  masterCount Int
-  payment String?
+  no            Int        @id @default(autoincrement())
+  id            String     @unique
+  pw            String
+  name          String?
+  phone         String?
+  team          team[]
+  joinTeam      joinTeam[]
+  masterCount   Int
+  payment       String?
+  joinSchedule  joinSchedule[]
 }
 
 model team {
-  no       Int @id @default(autoincrement())
+  no       Int        @id @default(autoincrement())
   master   String
-  user     user  @relation(fields: [master], references: [id])
+  user     user       @relation(fields: [master], references: [id])
   name     String
-  code     String @unique
+  code     String     @unique
   joinTeam joinTeam[]
+  calendar calendar[]
 }
 
 model joinTeam {
-  no        Int @id @default(autoincrement())
+  no        Int    @id @default(autoincrement())
   userId    String
-  user      user @relation(fields: [userId], references: [id])
-  team_code  String @map("teamCode")
-  team      team @relation(fields: [team_code], references: [code])
+  user      user   @relation(fields: [userId], references: [id])
+  team_code String @map("teamCode")
+  team      team   @relation(fields: [team_code], references: [code])
+}
+
+model calendar {
+  no        Int      @id @default(autoincrement())
+  name      String
+  startsche DateTime @map("startSche")
+  endsche   DateTime @map("endSche")
+  code      String   @unique
+  teamcode  String   @map("teamCode")
+  team      team     @relation(fields: [teamcode], references: [code])
+  joinScedule joinSchedule[]
+}
+
+model joinSchedule {
+  no        Int       @id @default(autoincrement())
+  calcode   String    @map("calCode")
+  calendar  calendar  @relation(fields: [calcode], references: [code])
+  member    String
+  user      user      @relation(fields: [member], references: [id])
 }
