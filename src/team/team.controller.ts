@@ -68,14 +68,14 @@ export class TeamController {
                 },
             })
             // create JoinTeam Data
-            this.teamService.createJoinTeam({
-                user: {
-                    connect: { id: teamMaster }
-                },
-                team: {
-                    connect: { code: teamCode }
-                }
-            })
+            // this.teamService.createJoinTeam({
+            //     user: {
+            //         connect: { id: teamMaster }
+            //     },
+            //     team: {
+            //         connect: { code: teamCode }
+            //     }
+            // })
 
             return res.status(200).send({
                 statusMsg: 'Created Successfully',

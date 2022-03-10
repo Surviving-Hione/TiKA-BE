@@ -5,6 +5,8 @@ import { UserController } from './user/user.controller';
 import { UserService } from './user/user.service';
 import { TeamController } from './team/team.controller';
 import { TeamService } from './team/team.service';
+import { JointeamController } from './jointeam/jointeam.controller';
+import { JointeamService } from './jointeam/jointeam.service';
 
 @Module({
   imports: [
@@ -12,12 +14,14 @@ import { TeamService } from './team/team.service';
   ],
   controllers: [
     UserController,
-    TeamController
+    TeamController,
+    JointeamController
   ],
   providers: [
     PrismaService,
     UserService,
-    TeamService
+    TeamService,
+    JointeamService
   ],
 })
 export class AppModule {}
