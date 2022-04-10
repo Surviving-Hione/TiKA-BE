@@ -37,10 +37,16 @@ export class TeamController {
         @Res() res
     ): Promise<String> {
         const { name, teamMaster } = data;
-        const teamCode = Math.random().toString(36).slice(2);
-        // while (teamCode != (await this.teamService.getTeam({ code: String(teamCode) })).code) {
+        let teamCode = Math.random().toString(36).slice(2);
+        // let teamCode = 'imwyxldo0r';
+
+        // TeamCode 유효성 검사...
+        // getTeam 조회 시, 아무것도 없는 공백이 나오기때문에 현상 발생
+        // while (this.teamService.getTeam({ code: String(teamCode)}) != null) {
         //     teamCode = Math.random().toString(36).slice(2);
         // }
+
+        // 팀 마스터 유저가 생성권을 가지고 있지 않은 경우
         if ((await this.userService.getUser({ id: String(teamMaster) })).masterCount <= 0) {
             return res.status(400).send({
                 statusMsg: 'Created Fail, Do not have MasterCount',
@@ -51,6 +57,7 @@ export class TeamController {
                 }
             })
         }
+
         else {
             // user masterCount - 1
             this.userService.updateUser({
@@ -60,7 +67,7 @@ export class TeamController {
                 }
             })
             // 팀 생성
-            this.teamService.createTeam({
+            await this.teamService.createTeam({
                 name,
                 code: teamCode,
                 user: {
@@ -68,14 +75,14 @@ export class TeamController {
                 },
             })
             // create JoinTeam Data
-            // this.teamService.createJoinTeam({
-            //     user: {
-            //         connect: { id: teamMaster }
-            //     },
-            //     team: {
-            //         connect: { code: teamCode }
-            //     }
-            // })
+            this.teamService.createJoinTeam({
+                user: {
+                    connect: { id: teamMaster }
+                },
+                team: {
+                    connect: { code: teamCode }
+                }
+            })
 
             return res.status(200).send({
                 statusMsg: 'Created Successfully',
