@@ -35,6 +35,7 @@ export class UserController {
             return this.userService.createUser(userData)
         }
 
+    // 회원정보 수정
     @Put(':id')
     async publishTeam(
         @Param('id') id: string,
