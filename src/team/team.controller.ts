@@ -42,9 +42,10 @@ export class TeamController {
 
         // TeamCode 유효성 검사...
         // getTeam 조회 시, 아무것도 없는 공백이 나오기때문에 현상 발생
-        // while (this.teamService.getTeam({ code: String(teamCode)}) != null) {
-        //     teamCode = Math.random().toString(36).slice(2);
-        // }
+        while (this.teamService.getTeam({ code: String(teamCode)}) != null) {
+            teamCode = Math.random().toString(36).slice(2);
+            break;
+        }
 
         // 팀 마스터 유저가 생성권을 가지고 있지 않은 경우
         if ((await this.userService.getUser({ id: String(teamMaster) })).masterCount <= 0) {
@@ -66,7 +67,9 @@ export class TeamController {
                     masterCount: (await this.userService.getUser({ id: String(teamMaster) })).masterCount - 1
                 }
             })
+
             // 팀 생성
+            // 비동기적으로 실행하여 팀 생성 전에 joinTeam 데이터가 생기는 것을 방지함
             await this.teamService.createTeam({
                 name,
                 code: teamCode,
