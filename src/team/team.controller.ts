@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Put, Delete, HttpCode, Res } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Delete, Res } from '@nestjs/common';
 import { TeamService } from './team.service';
 import { UserService } from '../user/user.service';
 import { PrismaService } from '../prisma.service';
@@ -37,13 +37,13 @@ export class TeamController {
         @Res() res
     ): Promise<String> {
         const { name, teamMaster } = data;
-        let teamCode = Math.random().toString(36).slice(2);
+        let teamCode = Math.random().toString(36).slice(2).toUpperCase();
         // let teamCode = 'imwyxldo0r';
 
         // TeamCode 유효성 검사...
         // getTeam 조회 시, 아무것도 없는 공백이 나오기때문에 현상 발생
         while (this.teamService.getTeam({ code: String(teamCode)}) != null) {
-            teamCode = Math.random().toString(36).slice(2);
+            teamCode = Math.random().toString(36).slice(2).toUpperCase();
             break;
         }
 
