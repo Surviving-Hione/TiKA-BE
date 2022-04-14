@@ -9,14 +9,16 @@ export class JointeamService {
     ) {}
 
     async getAll(): Promise<joinTeam[] | null> {
-        return this.prismaService.joinTeam.findMany()
+        return this.prismaService.joinTeam.findMany(
+        )
     }
 
     // 특정 조건을 타겟으로 하여 검색할때는 controller에서 직접 탐색
-    // async getTarget(data: Prisma.joinTeamWhereInput): Promise<joinTeam[] | null> {
-    //     return this.prismaService.joinTeam.findMany(
-    //     )
-    // }
+    async getTarget(data: Prisma.joinTeamWhereInput): Promise<joinTeam[] | null> {
+        return this.prismaService.joinTeam.findMany({
+            where: data
+        })
+    }
 
     async joinTeam(data: Prisma.joinTeamCreateInput): Promise<joinTeam | null> {
         return this.prismaService.joinTeam.create({
