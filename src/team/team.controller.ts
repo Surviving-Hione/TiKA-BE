@@ -134,15 +134,17 @@ export class TeamController {
   // 해당 팀 삭제
   @Delete(':code')
   async deleteTeam(@Param('code') code: string, @Res() res): Promise<String> {
-    this.teamService.deleteTeam({ code: String(code) });
-
     // delete joinTeam data
     // 해당 팀에 가입되어 있는 모든 인원 강제 탈퇴
+
     this.prismaService.joinTeam.deleteMany({
       where: {
         team_code: String(code),
       },
     });
+
+    await this.teamService.deleteTeam({ code: String(code) });
+
     return res.status(200).send({
       statusMsg: 'Deleted Successfully',
     });
