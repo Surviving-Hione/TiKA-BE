@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { TeamService } from './team.service';
 import { UserService } from '../user/user.service';
+import { JointeamService } from 'src/jointeam/jointeam.service';
 import { PrismaService } from '../prisma.service';
 import { team as TeamModel } from '@prisma/client';
 
@@ -18,6 +19,7 @@ export class TeamController {
   constructor(
     private readonly teamService: TeamService,
     private readonly userService: UserService,
+    private readonly jointeamService: JointeamService,
     private readonly prismaService: PrismaService,
   ) {}
 
@@ -133,20 +135,30 @@ export class TeamController {
 
   // 해당 팀 삭제
   @Delete(':code')
-  async deleteTeam(@Param('code') code: string, @Res() res): Promise<String> {
-    // delete joinTeam data
-    // 해당 팀에 가입되어 있는 모든 인원 강제 탈퇴
+  async deleteTeam(
+    @Param('code') code: string,
+    @Res() res,
+  ): Promise<TeamModel> {
+    let obj = await this.jointeamService.getTarget({ team_code: String(code) });
+    let count = Object.keys(obj).length;
 
-    this.prismaService.joinTeam.deleteMany({
-      where: {
-        team_code: String(code),
-      },
-    });
+    // 해당 팀에 마스터 외에 사람이 있을 경우 삭제가 안되게
+    if (count >= 2) {
+      return res.status(500).send({
+        statusMsg: 'Deleted Failed, There are remaining team members.',
+        data: obj,
+      });
+      // 해당 팀에 1명 이내 (팀 마스터)가 있을 경우 해당 joinTeam Data 삭제하고 Team 삭제
+    } else if (count <= 1) {
+      this.jointeamService.deletejoin({
+        no: obj[0].no,
+      });
 
-    await this.teamService.deleteTeam({ code: String(code) });
+      await this.teamService.deleteTeam({ code: String(code) });
 
-    return res.status(200).send({
-      statusMsg: 'Deleted Successfully',
-    });
+      return res.status(200).send({
+        statusMsg: 'Deleted Successfully',
+      });
+    }
   }
 }
