@@ -64,11 +64,25 @@ export class JointeamController {
   ): Promise<String> {
     const userId = data.userId;
     const team_code = data.team_code;
-    this.prismaServise.joinTeam.deleteMany({
-      where: {
-        userId: String(userId),
-        team_code: String(team_code),
-      },
+
+    let deleteTarget = await this.joinTeamService.getTarget({
+      userId: userId,
+      team_code: team_code,
+    });
+
+    // 타겟을 찾는 중에 문제가 생기면 500 리턴
+    if (deleteTarget.length > 1) {
+      return res.status(500).send({
+        statusMsg: 'Target Find Failed, The user is duplicate.',
+      });
+    } else if (deleteTarget.length == 0) {
+      return res.status(500).send({
+        statusMsg: 'Target Find Failed, The user could not be found.',
+      });
+    }
+
+    this.joinTeamService.deletejoin({
+      no: deleteTarget[0].no,
     });
 
     return res.status(200).send({
