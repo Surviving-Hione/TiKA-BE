@@ -44,14 +44,29 @@ export class JointeamController {
   @Post()
   async addJoinTeam(
     @Body() joinData: { userId: string; team_code: string },
+    @Res() res,
   ): Promise<JoinTeamModel> {
-    return this.joinTeamService.joinTeam({
+    let searchTarget = await this.joinTeamService.getTarget({
+      userId: joinData.userId,
+      team_code: joinData.team_code,
+    });
+
+    if (searchTarget.length > 1) {
+      return res.status(500).send({
+        statusMsg: 'are already subscribed.',
+      });
+    }
+
+    this.joinTeamService.joinTeam({
       user: {
         connect: { id: joinData.userId },
       },
       team: {
         connect: { code: joinData.team_code },
       },
+    });
+    return res.status(200).send({
+      statusMsg: 'Created Successfully',
     });
   }
 
