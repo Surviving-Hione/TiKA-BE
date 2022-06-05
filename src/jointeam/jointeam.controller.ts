@@ -114,7 +114,8 @@ export class JointeamController {
     });
 
     return res.status(200).send({
-      statusMsg: userId,
+      statusMsg: 'Deleted Successfully',
+      data: userId,
       team_code,
     });
   }
