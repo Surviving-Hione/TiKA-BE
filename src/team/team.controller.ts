@@ -53,9 +53,8 @@ export class TeamController {
 
     // TeamCode 유효성 검사...
     // getTeam 조회 시, 아무것도 없는 공백이 나오기때문에 현상 발생
-    while (this.teamService.getTeam({ code: String(teamCode) }) != null) {
+    while (this.teamService.getTeam({ code: String(teamCode) }) == null) {
       teamCode = Math.random().toString(36).slice(2).toUpperCase();
-      break;
     }
 
     // 팀 마스터 유저가 생성권을 가지고 있지 않은 경우
