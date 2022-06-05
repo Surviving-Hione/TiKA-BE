@@ -9,12 +9,14 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { JointeamService } from './jointeam.service';
+import { TeamService } from 'src/team/team.service';
 import { joinTeam as JoinTeamModel } from '@prisma/client';
 
 @Controller('jointeam')
 export class JointeamController {
   constructor(
     private readonly joinTeamService: JointeamService,
+    private readonly teamService: TeamService,
     private readonly prismaServise: PrismaService,
   ) {}
 
@@ -85,7 +87,18 @@ export class JointeamController {
       team_code: team_code,
     });
 
-    // 타겟을 찾는 중에 문제가 생기면 500 리턴
+    let masterTarget = await this.teamService.getTeam({
+      code: team_code,
+    });
+
+    // 탈퇴하려는 사용자가 팀 마스터일 경우 500 리턴
+    if (masterTarget.master == data.userId) {
+      return res.status(500).send({
+        statusMsg: 'Deleted Fail. This user is the Team Master',
+      });
+    }
+
+    // 삭제 타겟이 0보다 낮거나 1 초과와 같으면 500 리턴
     if (deleteTarget.length > 1) {
       return res.status(500).send({
         statusMsg: 'Target Find Failed, The user is duplicate.',
