@@ -144,13 +144,17 @@ export class TeamController {
     }
 
     // 해당 팀에 변경할 팀장이 가입되어 있는지 확인
-    let member = [];
-    let count = 0;
-    for (let i = 0; i < joinTeamData.length; i++) {
-      member[count++] = joinTeamData[i].userId;
-    }
+    // let member = [];
+    // let count = 0;
+    // for (let i = 0; i < joinTeamData.length; i++) {
+    //   member[count++] = joinTeamData[i].userId;
+    // }
+
+    // 해당 팀에 변경할 팀장이 가입되어 있는지 유효성 검사
+    const joinedMaster = joinTeamData.find((element) => element.userId == master);
+    // console.log(joinedMaster);
     // 가입되어 있지 않으면..
-    if (!member.includes(master)) {
+    if (joinedMaster == undefined) {
       return res.status(400).send({
         statusMsg: 'Change Failed, The team master you want to change is not joined to the team.',
         data: {
