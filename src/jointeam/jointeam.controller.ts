@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Delete,
-  Res,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Delete, Res } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { JointeamService } from './jointeam.service';
 import { TeamService } from 'src/team/team.service';
@@ -44,11 +36,8 @@ export class JointeamController {
 
   //팀 가입
   @Post()
-  async addJoinTeam(
-    @Body() joinData: { userId: string; team_code: string },
-    @Res() res,
-  ): Promise<JoinTeamModel> {
-    let searchTarget = await this.joinTeamService.getTarget({
+  async addJoinTeam(@Body() joinData: { userId: string; team_code: string }, @Res() res): Promise<JoinTeamModel> {
+    const searchTarget = await this.joinTeamService.getTarget({
       userId: joinData.userId,
       team_code: joinData.team_code,
     });
@@ -75,19 +64,16 @@ export class JointeamController {
   // 팀 탈퇴
   // 현재 해당 팀에 가입되어있는지, 유저측과 팀측에서 2중으로 확인해보기
   @Delete()
-  async deleteJoinTeam(
-    @Body() data: { userId: string; team_code: string },
-    @Res() res,
-  ): Promise<String> {
+  async deleteJoinTeam(@Body() data: { userId: string; team_code: string }, @Res() res): Promise<string> {
     const userId = data.userId;
     const team_code = data.team_code;
 
-    let deleteTarget = await this.joinTeamService.getTarget({
+    const deleteTarget = await this.joinTeamService.getTarget({
       userId: userId,
       team_code: team_code,
     });
 
-    let masterTarget = await this.teamService.getTeam({
+    const masterTarget = await this.teamService.getTeam({
       code: team_code,
     });
 
