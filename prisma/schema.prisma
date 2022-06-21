@@ -18,7 +18,7 @@ model user {
   joinTeam      joinTeam[]
   masterCount   Int
   payment       String?
-  joinSchedule  joinSchedule[]
+  clearTodo     clearTodo[]
 }
 
 model team {
@@ -28,7 +28,7 @@ model team {
   name     String
   code     String     @unique
   joinTeam joinTeam[]
-  calendar calendar[]
+  todo     todo[]
 }
 
 model joinTeam {
@@ -39,21 +39,19 @@ model joinTeam {
   team      team   @relation(fields: [team_code], references: [code])
 }
 
-model calendar {
-  no        Int      @id @default(autoincrement())
-  name      String
-  startsche DateTime @map("startSche")
-  endsche   DateTime @map("endSche")
-  code      String   @unique
-  teamcode  String   @map("teamCode")
-  team      team     @relation(fields: [teamcode], references: [code])
-  joinScedule joinSchedule[]
+model todo {
+  todocode    String      @id
+  title       String
+  teamcode    String
+  team        team        @relation(fields: [teamcode], references: [code])
+  date        DateTime
+  clearTodo    clearTodo[]
 }
 
-model joinSchedule {
-  no        Int       @id @default(autoincrement())
-  calcode   String    @map("calCode")
-  calendar  calendar  @relation(fields: [calcode], references: [code])
-  member    String
-  user      user      @relation(fields: [member], references: [id])
+model clearTodo {
+  joincode    String      @id
+  todocode    String
+  todo        todo        @relation(fields: [todocode], references: [todocode])
+  userId      String
+  user        user        @relation(fields: [userId], references: [id])
 }
