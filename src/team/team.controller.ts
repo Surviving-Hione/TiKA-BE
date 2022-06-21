@@ -34,7 +34,7 @@ export class TeamController {
 
   // 팀 생성
   @Post()
-  async createTeam(@Body() data: { name: string; teamMaster: string }, @Res() res): Promise<String> {
+  async createTeam(@Body() data: { name: string; teamMaster: string }, @Res() res): Promise<string> {
     const { name, teamMaster } = data;
     let teamCode = Math.random().toString(36).slice(2).toUpperCase();
     // let teamCode = 'imwyxldo0r';
@@ -121,7 +121,7 @@ export class TeamController {
     teamData: {
       master: string;
     },
-  ): Promise<String> {
+  ): Promise<string> {
     const master = teamData.master;
 
     // 변경될 팀의 데이터
@@ -216,8 +216,8 @@ export class TeamController {
   // 해당 팀 삭제
   @Delete(':code')
   async deleteTeam(@Param('code') code: string, @Res() res): Promise<TeamModel> {
-    let obj = await this.joinTeamService.getTarget({ team_code: String(code) });
-    let count = Object.keys(obj).length;
+    const obj = await this.joinTeamService.getTarget({ team_code: String(code) });
+    const count = Object.keys(obj).length;
 
     // 해당 팀에 마스터 외에 사람이 있을 경우 삭제가 안되게
     if (count >= 2) {
