@@ -9,4 +9,10 @@ export class TodoService {
   async getAll(): Promise<todo[] | null> {
     return this.prismaService.todo.findMany();
   }
+
+  async teamTodo(data: Prisma.todoWhereInput): Promise<todo[] | null> {
+    return this.prismaService.todo.findMany({
+      where: data,
+    });
+  }
 }
