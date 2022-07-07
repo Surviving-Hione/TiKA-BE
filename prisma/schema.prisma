@@ -19,6 +19,7 @@ model user {
   masterCount   Int
   payment       String?
   clearTodo     clearTodo[]
+  jointodo      joinTodo[]
 }
 
 model team {
@@ -45,7 +46,17 @@ model todo {
   teamcode    String
   team        team        @relation(fields: [teamcode], references: [code])
   date        DateTime
-  clearTodo    clearTodo[]
+  clearTodo   clearTodo[]
+  joinTodo    joinTodo[]
+}
+
+model joinTodo {
+  todocode    String
+  todo        todo        @relation(fields: [todocode], references: [todocode])
+  member      String
+  user        user        @relation(fields: [member], references: [id])
+
+  @@id([member, todocode])
 }
 
 model clearTodo {
