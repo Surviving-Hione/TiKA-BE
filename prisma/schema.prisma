@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// 전화번호 인증으로 본인인증
+// 회원정보
 model user {
   no            Int        @id @default(autoincrement())
   id            String     @unique
@@ -22,6 +22,7 @@ model user {
   jointodo      joinTodo[]
 }
 
+// 팀 정보
 model team {
   no       Int        @id @default(autoincrement())
   master   String
@@ -32,6 +33,7 @@ model team {
   todo     todo[]
 }
 
+// 팀 가입 정보
 model joinTeam {
   no        Int    @id @default(autoincrement())
   userId    String
@@ -40,6 +42,7 @@ model joinTeam {
   team      team   @relation(fields: [team_code], references: [code])
 }
 
+// 할일 정보
 model todo {
   todocode    String      @id
   title       String
@@ -50,6 +53,7 @@ model todo {
   joinTodo    joinTodo[]
 }
 
+// todo에 가입되어 있는 팀원 data
 model joinTodo {
   todocode    String
   todo        todo        @relation(fields: [todocode], references: [todocode])
@@ -59,6 +63,7 @@ model joinTodo {
   @@id([member, todocode])
 }
 
+// todo의 성취도.
 model clearTodo {
   joincode    String      @id
   todocode    String
