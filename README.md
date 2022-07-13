@@ -43,6 +43,25 @@
 |          | http://localhost/todo/{TeamCode}          | Get    | 해당 팀의 할일 정보 검색               |
 |          | 이하 제작중..                             |
 
+## 기술 스택
+
+---
+
+### Backend
+
+- nodeJS
+- NestJS
+- Typescript
+- Prisma ( PostgresQL )
+
+### Deploy
+
+- pm2
+- NginX
+- docker
+- AWS EC2
+- AWS S3
+
 ## 폴더 구조
 
 ---
